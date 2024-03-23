@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.seabooks.mapper.TopupMapper">
+<!--    通过充值id获取充值记录-->
+    <select id="selectById" resultType="com.seabooks.entity.Topup">
+        select * from topup where topup_id = #{id}
+    </select>
+</mapper>

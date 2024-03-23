@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.seabooks.mapper.CommentsMapper">
+<!--    添加评论    -->
+    <insert id="addComments">
+        insert into comments(comments_id, user_id, comments_text, comments_time, comments_state, comments_score) values(#{commentsId},#{userId},#{commentsText},#{commentsTime},#{commentsState},#{commentsScore})
+    </insert>
+<!--    添加评论附表-->
+    <insert id="addAttComments">
+        insert into attachcomments(book_id, comments_id) VALUES (#{bookId},#{commentsId})
+    </insert>
+    <!--    根据书籍id获取评论-->
+    <select id="selectByBookIdAndComments" resultType="com.seabooks.entity.Comments">
+        select * from comments c inner join attachcomments a on a.comments_id = c.comments_id and a.book_id = #{id}
+    </select>
+    <!--    获取最后一个评论的id-->
+    <select id="selectGetCommentsId" resultType="com.seabooks.entity.Comments">
+        select * from comments order by comments_id desc limit 1
+    </select>
+<!--    根据用户id查询评论-->
+    <select id="selectByUserIdAndComments" resultType="com.seabooks.entity.Comments">
+        select * from comments where user_id = #{id}
+    </select>
+<!--    根据评论id获取书籍-->
+    <select id="selectByIdAndBookId" resultType="com.seabooks.entity.Books">
+        select * from books b inner join attachcomments c on b.book_id = c.book_id and c.comments_id = #{id}
+    </select>
+
+</mapper>

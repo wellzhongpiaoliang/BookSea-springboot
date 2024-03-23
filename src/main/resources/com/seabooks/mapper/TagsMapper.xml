@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.seabooks.mapper.TagsMapper">
+<!--    获取全部标签-->
+    <select id="showTags" resultType="com.seabooks.entity.Tags">
+        select * from tags
+    </select>
+<!--    通过标签id获取标签-->
+    <select id="selectById" resultType="com.seabooks.entity.Tags">
+        select * from tags where tags_id = #{id}
+    </select>
+</mapper>

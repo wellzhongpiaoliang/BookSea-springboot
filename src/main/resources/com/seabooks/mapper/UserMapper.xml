@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.seabooks.mapper.UserMapper">
+<!--    用户注册-->
+    <insert id="AddUser">
+        insert into users(user_id, user_name, user_password, user_signature,user_gender, user_img, user_email, user_phone, user_createdat, user_updatedat, user_status, user_role, user_outtime, user_money)values(#{userId},#{userName},#{userPassword},#{userSignature},#{userGender},#{userImg},#{userEmail},#{userPhone},#{userCreatedat},#{userUpdatedat},#{userStatus},#{userRole},#{userOuttime},#{userMoney})
+    </insert>
+<!--    充值记录-->
+    <insert id="addTopUp">
+        insert into topup(topup_id, user_id, money, topup_time, succeed) VALUES (#{topupId},#{userId},#{money},#{topupTime},#{succeed})
+    </insert>
+    <!--充值-->
+    <update id="addMoney">
+        update users set user_money=user_money+#{userMoney} where user_id = #{userId}
+    </update>
+    <!--    消费-->
+    <update id="delMoney">
+        update users set user_money = user_money - #{userMoney} where user_id = #{userId}
+    </update>
+    <!--    用户修改-->
+    <update id="UpdateUser">
+        update users
+        <set>
+            <if test="userName!=null and userName!=''">
+                user_name=#{userName},
+            </if>
+            <if test="userSignature!=null and userSignature!=''">
+                user_signature=#{userSignature},
+            </if>
+            <if test="userEmail!=null and userEmail!=''">
+                user_email=#{userEmail},
+            </if>
+            <if test="userPhone!=null and userPhone!=''">
+                user_phone=#{userPhone},
+            </if>
+            <if test="userGender!=null and userGender!=''">
+                user_gender=#{userGender},
+            </if>
+            <if test="userImg!=null and userImg!=''">
+                user_img=#{userImg},
+            </if>
+            <if test="userOuttime!=null and userOuttime!=''">
+                user_outtime=#{userOuttime},
+            </if>
+            <if test="userUpdatedat!=null and userUpdatedat!=''">
+                user_updatedat=#{userUpdatedat},
+            </if>
+            <if test="userMoney!=null and userMoney!=''">
+                user_money=#{userMoney},
+            </if>
+        </set>
+        where user_id = #{userId}
+    </update>
+
+    <!--    用户删除  -->
+    <delete id="DelUser">
+        delete from users where user_id = #{id};
+    </delete>
+
+    <!--    根据用户id查询用户  -->
+    <select id="selectById" resultType="com.seabooks.entity.Users">
+        select * from users where user_id = #{id}
+    </select>
+<!--    根据id和密码查询用户-->
+    <select id="selectByIdAndPwd" resultType="com.seabooks.entity.Users">
+        select * from users where user_id = #{userId} and user_password = #{userPassword}
+    </select>
+    <!--    根据邮箱和密码查询用户-->
+    <select id="selectByEmailAndPwd" resultType="com.seabooks.entity.Users">
+        select * from users where user_email = #{userEmail} and user_password = #{userPassword}
+    </select>
+<!--    查询全部用户-->
+    <select id="showUsers" resultType="com.seabooks.entity.Users">
+        select * from users
+    </select>
+<!--    根据邮箱查询用户-->
+    <select id="selectByEmail" resultType="com.seabooks.entity.Users">
+        select * from users where user_email = #{userEmail}
+    </select>
+<!--    根据用户名查找用户-->
+    <select id="selectByName" resultType="com.seabooks.entity.Users">
+        select * from users where user_name = #{name}
+    </select>
+<!--    充值记录查询-->
+    <select id="selectTopUp" resultType="com.seabooks.entity.Topup">
+        select * from topup where user_id = #{id}
+    </select>
+<!--    根据作者名查询作者-->
+    <select id="selectByAutName" resultType="com.seabooks.entity.Authors">
+        select * from authors where authors_name like concat('%',#{name},'%')
+    </select>
+    <!--    修改密码-->
+    <update id="UpdatePwd">
+        update users set user_password = #{userPassword} where user_id = #{userId}
+    </update>
+
+    <select id="AdminByEmailAndPwd" resultType="com.seabooks.entity.Administrator">
+        select * from administrator where Administrator_email = #{administratorEmail} and Administrator_pwd = #{administratorPwd}
+    </select>
+</mapper>

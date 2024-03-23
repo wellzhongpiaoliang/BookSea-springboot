@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.seabooks.mapper.OrdersMapper">
+<!--    下单      -->
+    <insert id="addOrder">
+        insert into orders(orders_id, user_id, book_id, orders_date, orders_price, alipay, address, orders_status, product_list, orders_money, mode_distribution, remark, update_time, goods_num) values (#{ordersId},#{userId},#{bookId},#{ordersDate},#{ordersPrice},#{alipay},#{address},#{ordersStatus},#{productList},#{ordersMoney},#{modeDistribution},#{remark},#{updateTime},#{goodsNum})
+    </insert>
+<!--    根据id删除订单-->
+    <delete id="delOrder">
+        delete from orders where orders_id = #{id}
+    </delete>
+    <!--    根据订单id获取订单-->
+    <select id="selectById" resultType="com.seabooks.entity.Orders">
+        select * from orders where orders_id = #{id}
+    </select>
+<!--     根据用户id查询订单列表-->
+    <select id="selectByUserIdAndOrder" resultType="com.seabooks.entity.Orders">
+        select * from orders where user_id = #{id}
+    </select>
+<!--     根据订单id查询下单用户-->
+    <select id="selectByOrderIdAndUser" resultType="com.seabooks.entity.Users">
+        select * from users u inner join orders o on u.user_id = o.user_id and o.orders_id = #{id}
+    </select>
+<!--    根据下单id查询下单书籍-->
+    <select id="selectByOrderIdAndBooks" resultType="com.seabooks.entity.Books">
+        select * from books b inner join orders o on b.book_id = o.book_id and o.orders_id = #{id}
+    </select>
+
+</mapper>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.seabooks.mapper.BookMapper">
+<!--   添加收藏的书籍-->
+    <insert id="addCollectBook">
+        insert into usercollectbook(user_id, book_id) VALUES (#{userId},#{bookId})
+    </insert>
+<!--    添加浏览过的书-->
+    <insert id="addReadBook">
+        insert into userhistorybook(user_id, book_id) VALUES (#{userId},#{bookId})
+    </insert>
+<!--    阅读量添加-->
+    <update id="upBookRead">
+        update books set book_read = book_read+1 where book_id = #{id}
+    </update>
+    <!--    删除收藏的书-->
+    <delete id="delCollectBook">
+        delete from usercollectbook where book_id = #{bookId}
+    </delete>
+<!--   删除浏览的书 -->
+    <delete id="delReadBook">
+        delete
+        from userhistorybook
+        where book_id = #{bookId}
+    </delete>
+    <!--    查询全部书籍  -->
+    <select id="showBooks" resultType="com.seabooks.entity.Books">
+        select *
+        from books
+    </select>
+    <!--    根据书名查询书籍    -->
+    <select id="selectByName" resultType="com.seabooks.entity.Books">
+        select *
+        from books
+        where book_name like concat('%',#{bookName},'%')
+    </select>
+    <!--    根据书籍id查询书籍    -->
+    <select id="selectById" resultType="com.seabooks.entity.Books">
+        select *
+        from books
+        where book_id = #{id}
+    </select>
+    <!--    根据isbn查询书籍  -->
+    <select id="selectByIsbn" resultType="com.seabooks.entity.Books">
+        select *
+        from books
+        where book_isbn = #{isbn}
+    </select>
+    <!--    根据分类查询书籍-->
+    <select id="selectByCategory" resultType="com.seabooks.entity.Books">
+        select *
+        from books b
+                 inner join categories c on b.book_category = c.categories_id and c.categories_id = #{name}
+    </select>
+    <!--    获取新出版前八的书-->
+    <select id="selectByBooksDate" resultType="com.seabooks.entity.Books">
+        select *
+        from books
+        order by publish_date desc
+        limit 8
+    </select>
+    <!--    主编力荐-->
+    <select id="selectByPublishers" resultType="com.seabooks.entity.Books">
+        select *
+        from books
+        limit 8
+    </select>
+    <!--    根据书id获取分类名-->
+    <select id="selectByBookIdAndCategories" resultType="com.seabooks.entity.Categories">
+        select *
+        from categories c
+                 inner join books b on c.categories_id = b.book_category and b.book_id = #{id}
+    </select>
+    <!--    gt: 大于
+
+    gte: 大于等于
+
+    lt:小于
+
+    lte: 小于等于-->
+    <select id="selectParams" resultType="com.seabooks.entity.Books">
+        select * from books
+        <where>
+            <if test="bookRead >= 90000000 and bookRead !=null">
+                and book_read &gt;= 90000000
+            </if>
+            <if test="bookRead lt 90000000 and bookRead !=null">
+                and book_read &lt; 90000000
+            </if>
+            <if test="bookCategory != null and bookCategory != ''">
+                and book_category = #{bookCategory}
+            </if>
+            <if test="bookEnd != null and bookEnd != ''">
+                and book_end = #{bookEnd}
+            </if>
+            <if test="bookNum lt 20 and bookNum != null">
+                and book_num &lt; 20
+            </if>
+            <if test="bookNum gte 20 and bookNum lt 50">
+                and book_num &gt;= 20 and book_num &lt; 50
+            </if>
+            <if test="bookNum gte 50 and bookNum lt 100">
+                and book_num &gt;= 50 and book_num &lt; 100
+            </if>
+            <if test="bookNum gte 100 and bookNum lt 200">
+                and book_num &gt;= 100 and book_num &lt; 200
+            </if>
+            <if test="bookNum gte 200 and bookNum != null">
+                and book_num &gt;= 200
+            </if>
+        </where>
+    </select>
+    <!--    根据用户id查询收藏的书-->
+    <select id="selectByBookIdAndUserId" resultType="com.seabooks.entity.Books">
+        select *
+        from books b
+                 inner join usercollectbook c on b.book_id = c.book_id and c.user_id = #{userId}
+    </select>
+    <!--    根据用户id查询浏览的书-->
+    <select id="selectByReadAndUserId" resultType="com.seabooks.entity.Books">
+        select *
+        from books b
+                 inner join userhistorybook u on b.book_id = u.book_id and u.user_id = #{userId}
+    </select>
+
+
+</mapper>
